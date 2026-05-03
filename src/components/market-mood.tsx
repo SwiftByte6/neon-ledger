@@ -14,15 +14,15 @@ export function MarketMood() {
   const label = score > 70 ? "Extreme Greed" : score > 55 ? "Bullish" : score > 45 ? "Neutral" : score > 30 ? "Bearish" : "Extreme Fear";
 
   return (
-    <section className="rounded-3xl glass p-5 hover-lift relative overflow-hidden">
-      <div className="absolute -top-12 -right-12 h-40 w-40 bg-primary/15 blur-3xl rounded-full pointer-events-none" />
-      <div className="flex items-center justify-between mb-3 relative">
+    <section className="rounded-3xl glass p-3 hover-lift relative overflow-hidden">
+      <div className="absolute -top-8 -right-8 h-28 w-28 bg-primary/15 blur-3xl rounded-full pointer-events-none" />
+      <div className="flex items-center justify-between mb-2.5 relative">
         <h3 className="font-semibold flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-primary" /> Market Mood
         </h3>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Live · F&G</span>
       </div>
-      <div className="relative w-full aspect-[2/1] max-h-[160px]">
+      <div className="relative w-full aspect-[2/1] max-h-[120px]">
         <svg viewBox="0 0 200 110" className="w-full h-full">
           <defs>
             <linearGradient id="mood" x1="0" x2="1">
@@ -40,8 +40,8 @@ export function MarketMood() {
         </svg>
       </div>
       <div className="text-center mt-1">
-        <div className="font-mono text-3xl font-semibold neon-text">{Math.round(score)}</div>
-        <div className="text-xs text-muted-foreground uppercase tracking-widest">{label}</div>
+        <div className="font-mono text-lg font-semibold neon-text">{Math.round(score)}</div>
+        <div className="text-[10px] text-muted-foreground uppercase tracking-widest">{label}</div>
       </div>
     </section>
   );

@@ -74,28 +74,29 @@ function Dashboard() {
               <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-6 backdrop-blur-sm card--border-glow">
                 <MainChart />
               </GlowCard>
-              <div className="grid gap-6">
-                <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-6 backdrop-blur-sm card--border-glow">
-                  <MarketMood />
-                </GlowCard>
-                <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-6 backdrop-blur-sm card--border-glow">
-                  <Allocation />
-                </GlowCard>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-6 backdrop-blur-sm card--border-glow">
                 <Watchlist />
               </GlowCard>
-              <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-6 backdrop-blur-sm card--border-glow">
-                <Transactions />
-              </GlowCard>
             </div>
 
-            <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-6 backdrop-blur-sm card--border-glow">
-              <NewsFeed />
-            </GlowCard>
+            <div className="grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] xl:grid-cols-[0.84fr_1.16fr] gap-4">
+              <div className="grid gap-3">
+                <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-3 backdrop-blur-sm card--border-glow">
+                  <MarketMood />
+                </GlowCard>
+                <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-3 backdrop-blur-sm card--border-glow">
+                  <Allocation />
+                </GlowCard>
+              </div>
+              <div className="grid gap-3">
+                <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-3 backdrop-blur-sm card--border-glow">
+                  <Transactions />
+                </GlowCard>
+                <GlowCard className="rounded-2xl border border-border/60 bg-[var(--surface-2)]/45 p-4 backdrop-blur-sm card--border-glow">
+                  <NewsFeed />
+                </GlowCard>
+              </div>
+            </div>
 
             {/* <div className="mt-12">
               <h2 className="text-2xl font-bold mb-4 text-foreground">Features</h2>

@@ -85,8 +85,7 @@ export const news: News[] = [
     source: "CoinDesk",
     time: "12m",
     tag: "Markets",
-    image:
-      "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=900&q=70",
+    image: "/image10.jpg",
   },
   {
     id: "n2",
@@ -94,8 +93,7 @@ export const news: News[] = [
     source: "The Block",
     time: "1h",
     tag: "Tech",
-    image:
-      "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=70",
+    image: "/image11.jpg",
   },
   {
     id: "n3",
@@ -103,8 +101,7 @@ export const news: News[] = [
     source: "Decrypt",
     time: "3h",
     tag: "DeFi",
-    image:
-      "https://images.unsplash.com/photo-1639389016895-3611781efc46?auto=format&fit=crop&w=900&q=70",
+    image: "/image12.jpg",
   },
 ];
 

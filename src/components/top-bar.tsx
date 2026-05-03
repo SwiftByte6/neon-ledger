@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, Search, ChevronDown, Check } from "lucide-react";
+import { Bell, Search, ChevronDown, Check, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { gsap } from "gsap";
 import {
   DropdownMenu,
@@ -7,6 +8,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
+import { Dialog, DialogTrigger, DialogContent, DialogClose } from "./ui/dialog";
+import ProfileCard from "./profile-card";
+import { assets } from "../lib/mock-data";
+
+const PROFILE_USER = {
+  name: "Urusa",
+  title: "Head of Product",
+  handle: "urusa",
+  contactText: "Contact Me",
+  avatarUrl: "/image14.jpeg",
+  miniAvatarUrl: "/image14.jpeg",
+  iconUrl: "/image14.jpeg",
+  innerGradient: "linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)",
+};
 
 const MODELS = [
   { id: "gpt-4", name: "GPT-4", description: "Most capable" },
@@ -38,12 +53,28 @@ const createParticleElement = (x: number, y: number, color = GLOW_COLOR) => {
 
 export function TopBar() {
   const [selectedModel, setSelectedModel] = useState("gpt-4");
+  const [isOnline, setIsOnline] = useState(() => typeof navigator !== "undefined" ? navigator.onLine : true);
   const profileCardRef = useRef<HTMLButtonElement>(null);
   const particlesRef = useRef<HTMLElement[]>([]);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const isHoveredRef = useRef(false);
   const memoizedParticles = useRef<HTMLElement[]>([]);
   const particlesInitialized = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   const initializeParticles = () => {
     if (particlesInitialized.current || !profileCardRef.current) return;
@@ -253,20 +284,58 @@ export function TopBar() {
               <Bell className="h-4 w-4" />
               <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(212,255,63,0.8)]" />
             </button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Dialog>
+              <DialogTrigger asChild>
                 <button
                   ref={profileCardRef}
                   className="profile-card-glow flex items-center gap-2 pl-1 pr-2 h-10 rounded-xl border border-border bg-[var(--surface-2)]/70 hover:border-purple-500/60 transition cursor-pointer relative overflow-hidden"
                 >
-                  <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-purple-500 to-emerald-400 grid place-items-center text-primary-foreground text-xs font-bold relative z-10">
-                    AX
+                  <div className="h-8 w-8 rounded-full overflow-hidden border border-border bg-slate-950/10 grid place-items-center relative z-10">
+                    <img src={PROFILE_USER.avatarUrl} alt={PROFILE_USER.name} className="h-full w-full object-cover" />
                   </div>
                   <div className="hidden sm:block text-xs leading-tight relative z-10">
-                    <div className="font-medium">Alex Chen</div>
+                    <div className="font-medium">{PROFILE_USER.name}</div>
                     <div className="text-muted-foreground">Pro</div>
                   </div>
                   <ChevronDown className="h-3.5 w-3.5 text-muted-foreground relative z-10" />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="h-full w-full max-w-none min-h-screen rounded-none p-0">
+                <div className="h-full w-full flex items-center justify-center bg-background/90 p-4 sm:p-6">
+                  <div className="relative w-full max-w-5xl">
+                    <DialogClose asChild>
+                      <Link
+                        to="/"
+                        className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-background/80 text-muted-foreground shadow-sm transition hover:bg-background/90"
+                      >
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close profile</span>
+                      </Link>
+                    </DialogClose>
+                    <ProfileCard
+                      name={PROFILE_USER.name}
+                      title={PROFILE_USER.title}
+                      handle={PROFILE_USER.handle}
+                      status={isOnline ? "Online" : "Offline"}
+                      contactText={PROFILE_USER.contactText}
+                      avatarUrl={PROFILE_USER.avatarUrl}
+                      miniAvatarUrl={PROFILE_USER.miniAvatarUrl}
+                      iconUrl={PROFILE_USER.iconUrl}
+                      behindGlowEnabled
+                      enableTilt
+                      enableMobileTilt
+                      innerGradient={PROFILE_USER.innerGradient}
+                      stocks={assets}
+                      onContactClick={() => console.log("Contact clicked")}
+                    />
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-10 w-10 rounded-xl border border-border bg-[var(--surface-2)]/70 grid place-items-center hover:border-primary/40 transition">
+                  <ChevronDown className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
