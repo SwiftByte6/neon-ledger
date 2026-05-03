@@ -144,7 +144,7 @@ export function HeroBalance() {
   const changeAbs = 32_412.18;
 
   return (
-    <section className="relative overflow-hidden rounded-3xl glass p-6 md:p-8 grid-bg">
+    <div className="relative overflow-hidden">
       <div className="absolute -top-32 -right-24 h-80 w-80 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
@@ -228,6 +228,6 @@ export function HeroBalance() {
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

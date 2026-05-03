@@ -50,12 +50,62 @@ export function SideNav() {
         })}
       </nav>
 
-      <div className="mt-auto hidden lg:block rounded-2xl border border-border bg-[var(--surface-2)]/70 p-4">
-        <div className="text-[11px] uppercase tracking-widest text-muted-foreground mb-1">Pro Plan</div>
-        <div className="text-sm font-medium mb-3">Unlock real-time signals</div>
-        <button className="w-full rounded-lg bg-primary text-primary-foreground text-xs font-semibold py-2 hover:brightness-110 transition neon-glow-sm">
-          Upgrade
-        </button>
+      <div className="mt-auto space-y-4">
+        {/* Spotlight Effect */}
+        <div className="hidden lg:block relative h-32 rounded-2xl border border-border/40 bg-gradient-to-br from-green-500/5 to-transparent overflow-hidden">
+          <svg
+            viewBox="0 0 300 300"
+            className="absolute inset-0 w-full h-full opacity-60"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <filter id="sidebar-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <circle
+              cx="150"
+              cy="150"
+              r="80"
+              fill="none"
+              stroke="#22c55e"
+              strokeWidth="1"
+              opacity="0.3"
+              filter="url(#sidebar-glow)"
+            />
+            <circle
+              cx="150"
+              cy="150"
+              r="60"
+              fill="none"
+              stroke="#16a34a"
+              strokeWidth="1"
+              opacity="0.5"
+              filter="url(#sidebar-glow)"
+            />
+            <circle
+              cx="150"
+              cy="150"
+              r="40"
+              fill="rgba(34, 197, 94, 0.15)"
+              filter="url(#sidebar-glow)"
+            />
+          </svg>
+          <div className="absolute inset-0 bg-gradient-to-t from-green-500/10 via-transparent to-transparent" />
+        </div>
+
+        {/* Upgrade Card */}
+        <div className="hidden lg:block rounded-2xl border border-border bg-[var(--surface-2)]/70 p-4">
+          <div className="text-[11px] uppercase tracking-widest text-muted-foreground mb-1">Pro Plan</div>
+          <div className="text-sm font-medium mb-3">Unlock real-time signals</div>
+          <button className="w-full rounded-lg bg-primary text-primary-foreground text-xs font-semibold py-2 hover:brightness-110 transition neon-glow-sm">
+            Upgrade
+          </button>
+        </div>
       </div>
     </aside>
   );
