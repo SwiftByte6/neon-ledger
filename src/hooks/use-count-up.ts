@@ -24,3 +24,4 @@ export function useCountUp(target: number, duration = 1200, decimals = 2) {
     maximumFractionDigits: decimals,
   });
 }
+ 

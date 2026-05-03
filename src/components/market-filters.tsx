@@ -120,3 +120,4 @@ export function MarketFilters({ onFilterChange }: MarketFiltersProps) {
     </div>
   );
 }
+ 

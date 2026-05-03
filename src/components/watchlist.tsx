@@ -106,3 +106,4 @@ export function Watchlist({ assets = initial, selectedSymbol = "All", categoryLa
     </section>
   );
 }
+ 
