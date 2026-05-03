@@ -135,4 +135,3 @@ export function Particles({ count = 28 }: { count?: number }) {
     </div>
   );
 }
- 

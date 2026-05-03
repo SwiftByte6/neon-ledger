@@ -112,4 +112,3 @@ export const allocation = [
   { label: "Stable", value: 12, color: "#2C9A8F" },
   { label: "Other", value: 6, color: "#3A4150" },
 ];
- 

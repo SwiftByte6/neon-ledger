@@ -257,4 +257,3 @@ export function MainChart({ asset, range = "1W", categoryLabel = "All markets" }
     </section>
   );
 }
- 

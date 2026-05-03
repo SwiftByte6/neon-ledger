@@ -13,4 +13,3 @@ function Page() {
     </div>
   );
 }
- 

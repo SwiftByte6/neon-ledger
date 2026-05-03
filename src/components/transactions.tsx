@@ -44,4 +44,3 @@ export function Transactions() {
     </section>
   );
 }
- 

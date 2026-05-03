@@ -323,4 +323,3 @@ export function TopBar({ onProfileToggle, profileActive = false }: TopBarProps) 
     </>
   );
 }
- 

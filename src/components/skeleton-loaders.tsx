@@ -95,4 +95,3 @@ const shimmerStyle = `
 export function ShimmerStyles() {
   return <style>{shimmerStyle}</style>;
 }
- 
