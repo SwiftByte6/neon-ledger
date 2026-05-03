@@ -13,17 +13,128 @@ const seedFor: Record<Range, { len: number; vol: number; seed: number; base: num
   "1Y": { len: 80, vol: 5.5, seed: 41, base: 70 },
 };
 
+type MetricCardData = {
+  label: string;
+  value: string;
+  change: string;
+  positive: boolean;
+  sparkline: string;
+  seed: number;
+  base: number;
+  vol: number;
+};
+
+function MetricCard({ metric, data }: { metric: Pick<MetricCardData, "label" | "value" | "change" | "positive" | "sparkline">; data: number[] }) {
+  return (
+    <article className="rounded-2xl border border-border/60 bg-(--surface-2)/45 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{metric.label}</div>
+          <div className="mt-2 font-mono text-2xl font-semibold tracking-tight">{metric.value}</div>
+          <div className={`mt-1 inline-flex items-center gap-1 text-xs font-medium ${metric.positive ? "text-emerald-400" : "text-red-400"}`}>
+            {metric.positive ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}
+            {metric.change}
+          </div>
+        </div>
+
+        <div className="w-24 shrink-0 opacity-90 sm:w-28">
+          <Sparkline
+            data={data}
+            width={120}
+            height={38}
+            stroke={metric.sparkline}
+            fill
+            glow
+            className="h-auto w-full"
+          />
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function HeroBalance() {
   const [range, setRange] = useState<Range>("1W");
   const [balance, setBalance] = useState(284_516.42);
+  const [tick, setTick] = useState(0);
+  const [snapshot, setSnapshot] = useState({
+    marketCap: 2.34,
+    marketCapChange: 2.35,
+    volume: 108.45,
+    volumeChange: -3.42,
+    dominance: 52.36,
+    dominanceChange: 0.65,
+    greed: 68,
+    greedChange: 1.2,
+  });
   const series = useMemo(() => {
     const c = seedFor[range];
     return buildSeries(c.len, c.base, c.vol, c.seed);
   }, [range]);
 
+  const metrics: MetricCardData[] = [
+    {
+      label: "Total Market Cap",
+      value: `$${snapshot.marketCap.toFixed(2)}T`,
+      change: `${snapshot.marketCapChange >= 0 ? "+" : ""}${snapshot.marketCapChange.toFixed(2)}%`,
+      positive: snapshot.marketCapChange >= 0,
+      sparkline: "#33cc66",
+      seed: 11,
+      base: 96,
+      vol: 1.2,
+    },
+    {
+      label: "24h Volume",
+      value: `$${snapshot.volume.toFixed(2)}B`,
+      change: `${snapshot.volumeChange >= 0 ? "+" : ""}${snapshot.volumeChange.toFixed(2)}%`,
+      positive: snapshot.volumeChange >= 0,
+      sparkline: "#ff5c5c",
+      seed: 21,
+      base: 88,
+      vol: 1.6,
+    },
+    {
+      label: "BTC Dominance",
+      value: `${snapshot.dominance.toFixed(2)}%`,
+      change: `${snapshot.dominanceChange >= 0 ? "+" : ""}${snapshot.dominanceChange.toFixed(2)}%`,
+      positive: snapshot.dominanceChange >= 0,
+      sparkline: "#5d74ff",
+      seed: 31,
+      base: 82,
+      vol: 1.1,
+    },
+    {
+      label: "Fear & Greed Index",
+      value: `${Math.round(snapshot.greed)}`,
+      change: `${snapshot.greedChange >= 0 ? "+" : ""}${snapshot.greedChange.toFixed(1)}`,
+      positive: snapshot.greedChange >= 0,
+      sparkline: "#ffd23f",
+      seed: 41,
+      base: 76,
+      vol: 0.9,
+    },
+  ];
+
   useEffect(() => {
     const id = setInterval(() => {
       setBalance((b) => b + (Math.random() - 0.45) * 80);
+      setTick((t) => t + 1);
+      setSnapshot((current) => {
+        const nextMarketCap = Math.max(2.05, Math.min(2.8, current.marketCap + (Math.random() - 0.45) * 0.03));
+        const nextVolume = Math.max(92, Math.min(122, current.volume + (Math.random() - 0.5) * 1.6));
+        const nextDominance = Math.max(47, Math.min(57, current.dominance + (Math.random() - 0.5) * 0.18));
+
+        return {
+          marketCap: nextMarketCap,
+          marketCapChange: (nextMarketCap - current.marketCap) * 8.5,
+          volume: nextVolume,
+          volumeChange: (nextVolume - current.volume) * 2.8,
+          dominance: nextDominance,
+          dominanceChange: (nextDominance - current.dominance) * 12,
+          greed: Math.max(12, Math.min(88, current.greed + (Math.random() - 0.5) * 3.2)),
+          greedChange: (Math.random() - 0.45) * 2.4,
+        };
+      });
     }, 2200);
     return () => clearInterval(id);
   }, []);
@@ -36,6 +147,19 @@ export function HeroBalance() {
     <section className="relative overflow-hidden rounded-3xl glass p-6 md:p-8 grid-bg">
       <div className="absolute -top-32 -right-24 h-80 w-80 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
+
+      <div className="relative mb-6">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Live Market Snapshot</div>
+          <div className="text-[10px] uppercase tracking-[0.28em] text-primary/80">Updated every 2s</div>
+        </div>
+        <div className="grid gap-3 md:grid-cols-4">
+          {metrics.map((metric) => {
+            const data = buildSeries(26, metric.base, metric.vol, metric.seed + tick);
+            return <MetricCard key={metric.label} metric={metric} data={data} />;
+          })}
+        </div>
+      </div>
 
       <div className="relative grid lg:grid-cols-[1.1fr_1fr] gap-8 items-center">
         <div className="space-y-5">
@@ -66,7 +190,7 @@ export function HeroBalance() {
                 className={`px-3.5 h-8 rounded-lg text-xs font-medium transition-all ${
                   range === r
                     ? "bg-primary text-primary-foreground neon-glow-sm"
-                    : "bg-[var(--surface-2)]/70 text-muted-foreground hover:text-foreground border border-border"
+                    : "bg-(--surface-2)/70 text-muted-foreground hover:text-foreground border border-border"
                 }`}
               >
                 {r}
@@ -95,7 +219,7 @@ export function HeroBalance() {
           { l: "Realized P/L", v: "+$8,124", d: "this week", up: true },
           { l: "Win Rate", v: "68%", d: "30d avg", up: false },
         ].map((s) => (
-          <div key={s.l} className="rounded-xl bg-[var(--surface-2)]/40 border border-border/60 p-3">
+          <div key={s.l} className="rounded-xl bg-(--surface-2)/40 border border-border/60 p-3">
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{s.l}</div>
             <div className="font-mono text-lg font-semibold mt-1">{s.v}</div>
             <div className={`text-[11px] mt-0.5 ${s.up ? "text-primary" : "text-muted-foreground"}`}>
