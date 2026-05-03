@@ -44,7 +44,7 @@ const updateCardGlowProperties = (
   card.style.setProperty("--glow-radius", `${radius}px`);
 };
 
-interface GlowCardProps {
+interface GlowCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
   particleCount?: number;
@@ -58,6 +58,7 @@ export function GlowCard({
   particleCount = 6,
   enableParticles = true,
   enableBorderGlow = true,
+  ...rest
 }: GlowCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLElement[]>([]);
@@ -221,6 +222,7 @@ export function GlowCard({
         "--glow-intensity": "0",
         "--glow-radius": `${DEFAULT_SPOTLIGHT_RADIUS}px`,
       } as React.CSSProperties}
+      {...rest}
     >
       {children}
     </div>

@@ -61,7 +61,7 @@ const ProfileCardComponent = ({
     behindGlowColor,
     behindGlowSize,
     className = "",
-    enableTilt = true,
+    enableTilt = false,
     enableMobileTilt = false,
     mobileTiltSensitivity = 5,
     miniAvatarUrl,
@@ -193,13 +193,13 @@ const ProfileCardComponent = ({
         };
     }, [enableTilt]);
 
-    const getOffsets = (evt: React.PointerEvent<HTMLElement>, el: HTMLElement) => {
+    const getOffsets = (evt: Pick<PointerEvent, "clientX" | "clientY">, el: HTMLElement) => {
         const rect = el.getBoundingClientRect();
         return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
     };
 
     const handlePointerMove = useCallback(
-        (event: React.PointerEvent<HTMLElement>) => {
+        (event: PointerEvent) => {
             const shell = shellRef.current;
             if (!shell || !tiltEngine) return;
             const { x, y } = getOffsets(event, shell);
@@ -209,7 +209,7 @@ const ProfileCardComponent = ({
     );
 
     const handlePointerEnter = useCallback(
-        (event: React.PointerEvent<HTMLElement>) => {
+        (event: PointerEvent) => {
             const shell = shellRef.current;
             if (!shell || !tiltEngine) return;
 
@@ -361,7 +361,7 @@ const ProfileCardComponent = ({
         onContactClick?.();
     }, [onContactClick]);
 
-    const shineStyle: React.CSSProperties = {
+    const shineStyle = {
         maskImage: "var(--icon)",
         maskMode: "luminance",
         maskRepeat: "repeat",
@@ -408,7 +408,7 @@ const ProfileCardComponent = ({
         pointerEvents: "none",
         "--space": "5%" as any,
         "--angle": "-45deg" as any,
-    };
+    } as React.CSSProperties & Record<string, string | number>;
 
     const glareStyle: React.CSSProperties = {
         transform: "translate3d(0, 0, 1.1px)",
@@ -442,38 +442,24 @@ const ProfileCardComponent = ({
                     }}
                 />
             )}
-            <div ref={shellRef} className="relative z-[1] group">
+            <div ref={shellRef} className="relative z-1 group">
                 <section
                     className="grid relative overflow-hidden backface-hidden"
                     style={{
-                        width: "min(100%, 960px)",
+                        width: "min(100%, 390px)",
+                        aspectRatio: "2 / 3",
+                        height: "min(580px, calc(100vh - 4rem))",
                         minHeight: "560px",
                         borderRadius: cardRadius,
-                        backgroundBlendMode: "color-dodge, normal, normal, normal",
-                        boxShadow:
-                            "rgba(0, 0, 0, 0.22) calc((var(--pointer-from-left) * 10px) - 3px) calc((var(--pointer-from-top) * 20px) - 6px) 28px -8px",
-                        transition: "transform 1s ease",
-                        transform: "translateZ(0) rotateX(0deg) rotateY(0deg)",
-                        background: "linear-gradient(180deg, rgba(140, 116, 255, 0.22), rgba(20, 32, 64, 0.78))",
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.transition = "none";
-                        e.currentTarget.style.transform = "translateZ(0) rotateX(var(--rotate-y)) rotateY(var(--rotate-x))";
-                    }}
-                    onMouseLeave={(e) => {
-                        const shell = shellRef.current;
-                        if (shell?.classList.contains("entering")) {
-                            e.currentTarget.style.transition = "transform 180ms ease-out";
-                        } else {
-                            e.currentTarget.style.transition = "transform 1s ease";
-                        }
-                        e.currentTarget.style.transform = "translateZ(0) rotateX(0deg) rotateY(0deg)";
+                        boxShadow: "0 22px 60px -30px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(15, 23, 42, 0.08)",
+                        background: "linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.96))",
+                        border: "1px solid rgba(15, 23, 42, 0.08)",
                     }}
                 >
                     <div
                         className="absolute inset-0"
                         style={{
-                            backgroundImage: "var(--inner-gradient)",
+                            backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0.15))",
                             backgroundColor: "transparent",
                             borderRadius: cardRadius,
                             display: "grid",
@@ -486,7 +472,6 @@ const ProfileCardComponent = ({
                         <div
                             className="overflow-visible backface-hidden"
                             style={{
-                                mixBlendMode: "luminosity",
                                 transform: "translateZ(2px)",
                                 gridArea: "1 / -1",
                                 borderRadius: cardRadius,
@@ -494,14 +479,13 @@ const ProfileCardComponent = ({
                             }}
                         >
                             <img
-                                className="w-full absolute left-1/2 bottom-[-1px] backface-hidden will-change-transform transition-transform duration-[120ms] ease-out"
+                                className="absolute inset-0 h-full w-full backface-hidden object-cover will-change-transform transition-transform duration-120 ease-out"
                                 src={avatarUrl}
                                 alt={`${name || "User"} avatar`}
                                 loading="lazy"
                                 style={{
-                                    transformOrigin: "50% 100%",
-                                    transform:
-                                        "translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 6px)) translateZ(0) scaleY(calc(1 + (var(--pointer-from-top) - 0.5) * 0.02)) scaleX(calc(1 + (var(--pointer-from-left) - 0.5) * 0.01))",
+                                    objectPosition: "center 14%",
+                                    transform: "translateZ(0)",
                                     borderRadius: cardRadius,
                                 }}
                                 onError={(e) => {
@@ -511,19 +495,19 @@ const ProfileCardComponent = ({
                             />
                             {showUserInfo && (
                                 <div
-                                    className="absolute z-[2] flex items-center justify-between backdrop-blur-[30px] border border-white/10 pointer-events-auto"
+                                    className="absolute z-2 flex items-center justify-between backdrop-blur-[18px] border border-slate-200/70 pointer-events-auto"
                                     style={{
                                         bottom: "20px",
                                         left: "20px",
                                         right: "20px",
-                                        background: "rgba(255, 255, 255, 0.1)",
+                                        background: "rgba(255, 255, 255, 0.82)",
                                         borderRadius: `calc(max(0px, ${cardRadius} - 20px + 6px))`,
                                         padding: "12px 14px",
                                     }}
                                 >
                                     <div className="flex items-center gap-3">
                                         <div
-                                            className="rounded-full overflow-hidden border border-white/10 flex-shrink-0"
+                                            className="rounded-full overflow-hidden border border-slate-200 shrink-0"
                                             style={{ width: "48px", height: "48px" }}
                                         >
                                             <img
@@ -540,13 +524,13 @@ const ProfileCardComponent = ({
                                             />
                                         </div>
                                         <div className="flex flex-col items-start gap-1.5">
-                                            <div className="text-sm font-medium text-white/90 leading-none">@{handle}</div>
-                                            <div className="text-sm text-white/70 leading-none">{status}</div>
+                                            <div className="text-sm font-medium text-slate-900 leading-none">@{handle}</div>
+                                            <div className="text-sm text-slate-600 leading-none">{status}</div>
                                         </div>
                                     </div>
                                     <button
                                         type="button"
-                                        className="border border-white/10 rounded-lg px-4 py-3 text-xs font-semibold text-white/90 cursor-pointer backdrop-blur-[10px] transition-all duration-200 ease-out hover:border-white/40 hover:-translate-y-px"
+                                        className="border border-slate-200 rounded-lg px-4 py-3 text-xs font-semibold text-slate-900 cursor-pointer bg-white/90 transition-all duration-200 ease-out"
                                         onClick={handleContactClick}
                                         style={{ pointerEvents: "auto", borderRadius: "8px" }}
                                     >
@@ -557,11 +541,10 @@ const ProfileCardComponent = ({
                         </div>
 
                         <div
-                            className="max-h-full overflow-hidden text-center relative z-[5]"
+                            className="max-h-full overflow-hidden text-center relative z-5"
                             style={{
                                 transform:
                                     "translate3d(calc(var(--pointer-from-left) * -6px + 3px), calc(var(--pointer-from-top) * -6px + 3px), 0.1px)",
-                                mixBlendMode: "luminosity",
                                 gridArea: "1 / -1",
                                 borderRadius: cardRadius,
                                 pointerEvents: "none",
@@ -572,11 +555,7 @@ const ProfileCardComponent = ({
                                     className="font-semibold m-0 text-center"
                                     style={{
                                         fontSize: "min(5svh, 3em)",
-                                        backgroundImage: "linear-gradient(to bottom, #fff, #6f6be0)",
-                                        backgroundSize: "1em 1.5em",
-                                        WebkitTextFillColor: "transparent",
-                                        backgroundClip: "text",
-                                        WebkitBackgroundClip: "text",
+                                        color: "#0f172a",
                                         display: "block",
                                     }}
                                 >
@@ -589,11 +568,7 @@ const ProfileCardComponent = ({
                                         top: "-12px",
                                         fontSize: "16px",
                                         margin: "0 auto",
-                                        backgroundImage: "linear-gradient(to bottom, #fff, #7a7cff)",
-                                        backgroundSize: "1em 1.5em",
-                                        WebkitTextFillColor: "transparent",
-                                        backgroundClip: "text",
-                                        WebkitBackgroundClip: "text",
+                                        color: "#334155",
                                         display: "block",
                                     }}
                                 >
@@ -602,25 +577,25 @@ const ProfileCardComponent = ({
                             </div>
                             {stocks?.length ? (
                                 <div
-                                    className="absolute left-6 right-6 bottom-[120px] z-[4] rounded-[28px] border border-white/10 bg-white/10 backdrop-blur-xl p-4 shadow-2xl"
+                                    className="absolute left-6 right-6 bottom-30 z-4 rounded-[28px] border border-slate-200 bg-white/90 backdrop-blur-xl p-4 shadow-2xl"
                                     style={{
                                         backdropFilter: "blur(24px)",
                                     }}
                                 >
-                                    <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.3em] text-white/70 mb-3">
+                                    <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.3em] text-slate-500 mb-3">
                                         <span>Live holdings</span>
                                         <span>{stocks.length} assets</span>
                                     </div>
                                     <div className="grid gap-3">
                                         {stocks.slice(0, 3).map((stock) => (
-                                            <div key={stock.symbol} className="flex items-center justify-between gap-3 rounded-2xl bg-white/10 px-3 py-2">
+                                            <div key={stock.symbol} className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-3 py-2">
                                                 <div>
-                                                    <div className="text-sm font-semibold text-white">{stock.symbol}</div>
-                                                    <div className="text-[11px] text-white/60">{stock.name}</div>
+                                                    <div className="text-sm font-semibold text-slate-900">{stock.symbol}</div>
+                                                    <div className="text-[11px] text-slate-500">{stock.name}</div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <div className="text-sm font-semibold text-white">${stock.price.toLocaleString()}</div>
-                                                    <div className={stock.change >= 0 ? "text-emerald-300 text-[11px]" : "text-rose-300 text-[11px]"}>
+                                                    <div className="text-sm font-semibold text-slate-900">${stock.price.toLocaleString()}</div>
+                                                    <div className={stock.change >= 0 ? "text-emerald-600 text-[11px]" : "text-rose-600 text-[11px]"}>
                                                         {stock.change >= 0 ? "+" : ""}{stock.change.toFixed(2)}%
                                                     </div>
                                                 </div>
