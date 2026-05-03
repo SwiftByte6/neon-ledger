@@ -16,7 +16,6 @@ import MagicBento from "@/components/magic-bento";
 import ProfileCard from "@/components/profile-card";
 import { MarketFilters } from "@/components/market-filters";
 import { TrendIndicators } from "@/components/market-indicators";
-import { MarketCategories } from "@/components/market-categories";
 import { AdvancedAnalytics } from "@/components/advanced-analytics";
 import { assets } from "@/lib/mock-data";
 
@@ -146,9 +145,6 @@ function Dashboard() {
                   </GlowCard>
                 </div>
 
-                <GlowCard data-dashboard-entrance className="rounded-2xl border border-border/60 bg-(--surface-2)/45 p-3 backdrop-blur-sm card--border-glow">
-                  <MarketCategories />
-                </GlowCard>
 
                 <div className="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4.5">
                   <GlowCard data-dashboard-entrance className="rounded-2xl border border-border/60 bg-(--surface-2)/45 p-5 backdrop-blur-sm card--border-glow">

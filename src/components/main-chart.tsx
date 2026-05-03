@@ -110,7 +110,7 @@ export function MainChart({ asset, range = "1W", categoryLabel = "All markets" }
   };
 
   const yTicks = 5;
-  const range = mode === "line" ? { min: lineGeom.min, max: lineGeom.max } : { min: candleGeom.min, max: candleGeom.max };
+  const yAxisRange = mode === "line" ? { min: lineGeom.min, max: lineGeom.max } : { min: candleGeom.min, max: candleGeom.max };
 
   return (
     <section className="rounded-3xl glass p-5 md:p-6 hover-lift">
@@ -179,7 +179,7 @@ export function MainChart({ asset, range = "1W", categoryLabel = "All markets" }
 
           {Array.from({ length: yTicks }).map((_, i) => {
             const y = PAD.t + ((H - PAD.t - PAD.b) / (yTicks - 1)) * i;
-            const v = range.max - ((range.max - range.min) / (yTicks - 1)) * i;
+            const v = yAxisRange.max - ((yAxisRange.max - yAxisRange.min) / (yTicks - 1)) * i;
             return (
               <g key={i}>
                 <line x1={PAD.l} x2={W - PAD.r} y1={y} y2={y} stroke="rgba(255,255,255,0.05)" />
