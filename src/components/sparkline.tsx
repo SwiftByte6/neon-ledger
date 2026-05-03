@@ -35,10 +35,12 @@ export function Sparkline({
 
   return (
     <svg
+      width={width}
+      height={height}
       viewBox={`0 0 ${width} ${height}`}
       preserveAspectRatio="none"
       className={className}
-      style={{ color: stroke, overflow: "visible", width: "100%", height: "100%" }}
+      style={{ color: stroke, overflow: "visible" }}
     >
       <defs>
         <linearGradient id={id} x1="0" x2="0" y1="0" y2="1">
